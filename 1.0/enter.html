@@ -1,0 +1,75 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+    src="http://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/cmsStyle.css"/>
+
+<script>
+function funcBefore(){
+$("#title").html("Загрузка...");
+}
+function funcSuccess(data){
+if(data == "Error"){
+  $("#title").html("Неверные данные");
+}else{
+  document.location.href="index.html";
+}
+}
+
+$(document).ready(function(){
+$("#enterBut").bind("click", function(){
+  $.ajax({
+    url:"Controllers/autoController/auto.php",
+    type:"POST",
+    data:({query:"CheckPass", pass:$("#passText").val(), login:$("#loginText").val()}),
+    dataType:"html",
+    beforeSend: funcBefore,
+    success:funcSuccess
+  });
+});
+
+});
+</script>
+</head>
+<body style="background:#DCDCDC;">
+<style>
+#enterBlock{
+  background:white;
+  padding:50px;
+  height:400px;
+  width:400px;
+  margin-top:100px;
+}
+
+#wordEnter{
+  color:black;
+  font-size:180%;
+}
+
+
+</style>
+<div class="container" id="enterBlock">
+<h2 id="wordEnter" align="center">Войти </h2>
+<input   id="loginText" style="margin-bottom:0px;" placeholder="Логин"  />
+<input  id="passText" placeholder="Пароль" type="password" />
+
+<p align="center" ><button id="enterBut" class="waves-effect waves-light btn" style="width:100%; padding:2px; background:#1E90FF;">Войти</button></p>
+<h5 style="color:black;" id="title"></h5>
+</div>
+
+</body>
+</html>

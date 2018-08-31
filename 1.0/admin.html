@@ -1,0 +1,227 @@
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+    src="http://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <!-- Compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+ <!-- Compiled and minified JavaScript -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<link rel="stylesheet" href="style/style.css">
+
+<script>
+var status = "";
+
+var selectUser = "";
+function beforeGet(){
+
+}
+function successGet(data){
+  $("#content").html(data);
+}
+
+function beforeCheck(){
+
+}
+function successCheck(data){
+  if(data == "Error"){
+    document.location.href="enter.html";
+  }else{
+    if(data == "admin"){
+      status = "root";
+$("#main").show(500);
+$.ajax({
+  url:"Controllers/userController/GetUsers.php",
+  type:"POST",
+  dataType:"html",
+  data:({query:"GetUsers"}),
+  beforeSend:beforeGet,
+  success:successGet
+});
+}else{
+  $("#main").show(500);
+$("#main").html("<h4 align='center'>У вас нет доступа к этому разделу</h4>");
+}
+}
+$("#content").html("<h4 align='center'>У вас нет доступа к этому разделу</h4>");
+}
+
+function beforeDelete(){
+
+}
+function successDelete(data){
+  $.ajax({
+    url:"Controllers/userController/GetUsers.php",
+    type:"POST",
+    dataType:"html",
+    data:({query:"GetUsers"}),
+    beforeSend:beforeGet,
+    success:successGet
+  });
+  alert("Пользователь удалён");
+}
+function BeforeUpdate(){
+
+}
+function SuccessUpdate(data){
+  $.ajax({
+    url:"Controllers/userController/GetUsers.php",
+    type:"POST",
+    dataType:"html",
+    data:({query:"GetUsers"}),
+    beforeSend:beforeGet,
+    success:successGet
+  });
+
+}
+function beforeAdd(){
+
+}
+function successAdd(data){
+
+  $.ajax({
+    url:"Controllers/userController/GetUsers.php",
+    type:"POST",
+    dataType:"html",
+    data:({query:"GetUsers"}),
+    beforeSend:beforeGet,
+    success:successGet
+  });
+  alert("Пользователь добавлен");
+  $("#addBlock").hide(500);
+}
+$(document).ready(function(){
+
+$("#addBlock").hide();
+$("#updateBlock").hide();
+$("#main").hide();
+$.ajax({
+  url:"Controllers/autoController/CheckAuto.php",
+  type:"POST",
+  dataType:"html",
+  data:({query:"CheckPass"}),
+  beforeSend: beforeCheck,
+  success:successCheck
+});
+if(status != "root"){
+  $("#content").html("<h4 align='center'>У вас нет доступа к этому разделу</h4>");
+}
+$("#leftMenu").load("menu.html");
+$("#addBut").bind("click", function(){
+  $("#addBlock").show(500);
+});
+$("#cancel").bind("click", function(){
+  $("#addBlock").hide(500);
+});
+
+$("#addUser").bind("click", function(){
+  $.ajax({
+    url:"Controllers/userController/AddUser.php",
+    type:"POST",
+    dataType:"html",
+    data:({query:"AddUser", user: $("#loginText").val(), pass: $("#passText").val()}),
+    beforeSend: beforeAdd,
+    success:successAdd
+  });
+});
+
+$("#updateUser").bind("click", function(){
+  $("#updateBlock").hide(500);
+  $.ajax({
+    url:"Controllers/userController/UpdateUser.php",
+    type:"POST",
+    dataType:"html",
+    data:({user:selectUser, newPass:$("#newPassText").val()}),
+    beforeSend:BeforeUpdate,
+    success:SuccessUpdate
+  });
+  alert("Данные обновленны");
+});
+$("#cancelUpdate").bind("click", function(){
+  $("#updateBlock").hide(500);
+
+});
+
+});
+</script>
+</head>
+<body>
+<script>
+function deleteBut(button, user){
+$.ajax({
+    url:"Controllers/userController/DeleteUser.php",
+    type:"POST",
+    dataType:"html",
+    data:({name:user}),
+    beforeSend:beforeDelete,
+    success:successDelete
+  });
+
+}
+
+function updateBut(button, user){
+$("#updateBlock").show(500);
+selectUser = user;
+$("#userName").text(user);
+
+}
+</script>
+  <div class="container-fluid" style="margin:0px; height:98%;">
+  <div class="row" >
+
+
+      <div class="col-xs-12 col-sm-12 col-md-2 col-lg-3" id="leftMenu">
+  </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-9" id="main">
+
+
+<div id="addBlock">
+  <input type="text" id="loginText" placeholder="Логин"/>
+  <input type="text" id="passText" placeholder="Пароль"/>
+
+<a class="waves-effect waves-light btn" style="background:white; color:black;" id="addUser">Добавить</a>
+<a class="waves-effect waves-light btn" style="background:white; color:black;" id="cancel">Отменить</a>
+
+
+</div>
+<div id="updateBlock">
+<h5 id="userName"></h5>
+  <input type="text" id="newPassText" placeholder="Новый пароль"/>
+
+<a class="waves-effect waves-light btn" style="background:white; color:black;" id="updateUser">Изменить</a>
+<a class="waves-effect waves-light btn" style="background:white; color:black;" id="cancelUpdate">Отменить</a>
+
+
+</div>
+      <h2>Учётные записи</h2>
+
+      <a  class="btn-floating btn-large waves-effect waves-light green" id="addBut" ><i class="material-icons">add</i></a>
+
+
+      <div id="content"  >
+
+
+
+
+
+
+        </div>
+    </div>
+
+  </div>
+
+  </div>
+  <div class="container-fluid" id="footer">
+<a href="#"><font style="font-size:70%">Условия использования</font></a>
+  </div>
+</body>
+</html>

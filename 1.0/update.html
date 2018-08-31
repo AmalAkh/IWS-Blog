@@ -1,0 +1,130 @@
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+    src="http://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<link rel="stylesheet" href="style/style.css">
+
+<script>
+function funcBefore(){
+$("#artSelector").html("<option><h1 align='center'>Загрузка....</h1></option>");
+}
+function funcSuccess(data){
+  $("#artSelector").html(data);
+}
+
+
+function BeforeOpen(){
+
+}
+function SuccessOpen(data){
+$("#editText").val(data);
+}
+
+function BeforeUpdate(){
+
+}
+function SuccessUpdate(data){
+alert("Статья обновлена");
+}
+
+
+function beforeCheck(){
+
+}
+function successCheck(data){
+  if(data == "Error"){
+    document.location.href="enter.html";
+  }else{
+$("#main").show(500);
+  }
+}
+$(document).ready(function(){
+
+
+  $("#main").hide();
+  $.ajax({
+    url:"Controllers/CheckAuto.php",
+    type:"POST",
+    dataType:"html",
+    data:({query:"CheckPass"}),
+    beforeSend: beforeCheck,
+    success:successCheck
+  });
+  $("#leftMenu").load("menu.html");
+
+
+
+  $.ajax({
+url:"Controllers/GetList.php",
+type:"POST",
+dataType:"html",
+data:({query:"getList"}),
+beforeSend: funcBefore,
+success:funcSuccess
+
+  });
+
+$("#open").bind("click", function(){
+  $.ajax({
+url:"Controllers/Open.php",
+type:"POST",
+dataType:"html",
+data:({query:"open", name: $("#artSelector").val()}),
+beforeSend: BeforeOpen,
+success:SuccessOpen
+
+  });
+});
+
+$("#update").bind("click", function(){
+  $.ajax({
+url:"Controllers/Update.php",
+type:"POST",
+dataType:"html",
+data:({query:"update", name: $("#artSelector").val(), text: $("#editText").val()}),
+beforeSend: BeforeUpdate,
+success:SuccessUpdate
+
+  });
+});
+
+});
+</script>
+</head>
+<body>
+  <div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2" id="leftMenu" >
+  
+  </div>
+
+
+  <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+
+    <div class="container" id="main">
+
+      <div  class="container-fluid">
+        <textarea class="textField" id="editText" ></textarea>
+        <button class="but" id="update">Изменить</button>
+      </div>
+      <h2>Изменить</h2>
+
+    <button class="but" id="open">Изменить</button>
+      <select size="10" id="artSelector">
+
+      </select>
+    </div>
+  </div>
+
+
+  </div>
+
+
+</body>
+</html>
